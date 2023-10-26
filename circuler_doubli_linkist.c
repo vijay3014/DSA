@@ -14,14 +14,13 @@ int display()
     {
         printf("list is empty");
     }
-    else
+
+    while (ptr->next != head)
     {
-        while (ptr != NULL)
-        {
-            printf("%d ", ptr->data);
-            ptr = ptr->next;
-        }
+        printf("%d ", ptr->data);
+        ptr = ptr->next;
     }
+    printf("%d ", ptr->data);
     printf("\n");
 }
 
@@ -29,25 +28,25 @@ void insertend(int val)
 {
     struct node *ptr = head;
     struct node *temp = (struct node *)malloc(sizeof(struct node));
-
     temp->data = val;
-    temp->next = NULL;
 
     if (head == NULL)
     {
         head = temp;
-        temp->next = NULL;
-        temp->prev = NULL;
+        temp->next = temp;
+        temp->prev = temp;
         return;
     }
     else
     {
-        while (ptr->next != NULL)
-
+        while (ptr->next != head)
+        {
             ptr = ptr->next;
-
+        }
         ptr->next = temp;
         temp->prev = ptr;
+        temp->next = head;
+        head->prev = temp;
     }
     return;
 }
@@ -60,19 +59,19 @@ void deletend()
     {
         printf("\nlist is already empty");
     }
-    else if (ptr->next == NULL)
+    else if (ptr->next == head)
     {
         head = NULL;
         free(ptr);
     }
     else
     {
-        while (ptr->next != NULL)
+        while (ptr->next != head)
         {
             prev = ptr;
             ptr = ptr->next;
         }
-        prev->next = NULL;
+        prev->next = head;
         free(ptr);
     }
     return;
@@ -87,37 +86,47 @@ void insertfirst(int val)
     if (head == NULL)
     {
         head = temp;
-        temp->next = NULL;
-        temp->prev = NULL;
+        temp->next = temp;
+        temp->prev = temp;
         return;
     }
     else
     {
-        temp->prev = NULL;
-        temp->next = ptr;
-        ptr->prev = temp;
+        while (ptr->next != head)
+
+            ptr = ptr->next;
+
+        ptr->next = temp;
+        temp->prev = ptr;
+        temp->next = head;
+        head->prev = temp;
         head = temp;
     }
+    return;
 }
 void deletfirst()
 {
     struct node *ptr = head;
-    struct node *temp = head;
+    struct node *prev = head;
 
     if (head == NULL)
     {
         printf("list is already empty\n");
     }
-    else if (ptr->next == NULL)
+    else if (ptr->next == head)
     {
         head = NULL;
         free(ptr);
     }
     else
     {
-        head = ptr->next;
-        ptr->next->prev = NULL;
-        free(ptr);
+        while (ptr->next != head)
+            ptr = ptr->next;
+
+        ptr->next = head->next;
+        head ->next->prev = ptr;
+        head=prev->next;
+        free(prev);
     }
     return;
 }
@@ -136,7 +145,7 @@ void insertmid(int val, int posi)
         ptr = ptr->next;
     }
     prev->next = temp;
-    prev->prev = prev;
+    temp->prev = prev;
     temp->next = ptr;
     ptr->prev = temp;
     return;
@@ -152,26 +161,28 @@ void deletmid(int posi)
         ptr = ptr->next;
     }
     prev->next = ptr->next;
-    ptr->prev = ptr->prev->prev;
+    ptr->next->prev = prev;
     free(ptr);
     return;
 }
 
 int main()
-{   
-    insertend(10);
-    insertend(20);
-    insertend(30);
-    insertend(40);
-    display();
+{
+     insertend(10);
+     insertend(20);
+     insertend(30);
+     insertend(40);
+
+     display();
+
 
     // int x, y, ch;
-    // printf("1.insert end doubly simple linklist");
-    // printf("\n2.delet end doubly simple linklist");
-    // printf("\n3.insert first doubly simple linklist");
-    // printf("\n4.delet first doubly simple linklist");
-    // printf("\n5.insert mid doubly simple linklist");
-    // printf("\n6.delet mid doubly simple linklist");
+    // printf("1.insert end doubly circular linklist");
+    // printf("\n2.delet end doubly circular linklist");
+    // printf("\n3.insert first doubly circular linklist");
+    // printf("\n4.delet first doubly circular linklist");
+    // printf("\n5.insert mid doubly circular linklist");
+    // printf("\n6.delet mid doubly circular linklist");
     // printf("\n9.display");
     // printf("\n0.Exit");
 
@@ -219,7 +230,7 @@ int main()
 
     //     case 0:
     //         break;
-            
+
     //     default:
     //         printf("wrong choice");
     //         break;
