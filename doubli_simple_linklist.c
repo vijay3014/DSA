@@ -4,6 +4,7 @@ struct node
 {
     int data;
     struct node *next;
+    struct node *prev;
 };
 struct node *head = NULL;
 int display()
@@ -15,33 +16,39 @@ int display()
     }
     else
     {
-        while (ptr->next != head)
+        while (ptr != NULL)
         {
             printf("%d ", ptr->data);
             ptr = ptr->next;
         }
-        printf("%d ", ptr->data);
     }
     printf("\n");
 }
+
 void insertend(int val)
 {
     struct node *ptr = head;
     struct node *temp = (struct node *)malloc(sizeof(struct node));
 
     temp->data = val;
+    temp->next = NULL;
+
     if (head == NULL)
     {
         head = temp;
-        temp->next = head;
+        temp->next = NULL;
+        temp->prev = NULL;
         return;
     }
-    while (ptr->next != head)
+    else
+    {
+        while (ptr->next != NULL)
 
-        ptr = ptr->next;
+            ptr = ptr->next;
 
-    ptr->next = temp;
-    temp->next = head;
+        ptr->next = temp;
+        temp->prev = ptr;
+    }
     return;
 }
 void deletend()
@@ -53,19 +60,19 @@ void deletend()
     {
         printf("\nlist is already empty");
     }
-    else if (ptr->next == head)
+    else if (ptr->next == NULL)
     {
         head = NULL;
         free(ptr);
     }
     else
     {
-        while (ptr->next != head)
+        while (ptr->next != NULL)
         {
             prev = ptr;
             ptr = ptr->next;
         }
-        prev->next = head;
+        prev->next = NULL;
         free(ptr);
     }
     return;
@@ -75,22 +82,22 @@ void insertfirst(int val)
 {
     struct node *ptr = head;
     struct node *temp = (struct node *)malloc(sizeof(struct node));
-
     temp->data = val;
+
     if (head == NULL)
     {
         head = temp;
-        temp->next = head;
+        temp->next = NULL;
+        temp->prev = NULL;
         return;
     }
-    while (ptr->next != head)
+    else
     {
-        ptr = ptr->next;
+        temp->prev = NULL;
+        temp->next = ptr;
+        ptr->prev = temp;
+        head = temp;
     }
-    ptr->next = temp;
-    temp->next = head;
-    head = temp;
-    return;
 }
 void deletfirst()
 {
@@ -101,13 +108,17 @@ void deletfirst()
     {
         printf("list is already empty\n");
     }
-    while (ptr->next != head)
+    else if (ptr->next == NULL)
     {
-        ptr = ptr->next;
+        head = NULL;
+        free(ptr);
     }
-    ptr->next = temp->next;
-    head = temp->next;
-    free(temp);
+    else
+    {
+        head = ptr->next;
+        ptr->next->prev = NULL;
+        free(ptr);
+    }
     return;
 }
 
@@ -125,7 +136,9 @@ void insertmid(int val, int posi)
         ptr = ptr->next;
     }
     prev->next = temp;
+    prev->prev = prev;
     temp->next = ptr;
+    ptr->prev = temp;
     return;
 }
 void deletmid(int posi)
@@ -139,18 +152,20 @@ void deletmid(int posi)
         ptr = ptr->next;
     }
     prev->next = ptr->next;
+    ptr->prev = ptr->prev->prev;
     free(ptr);
     return;
 }
+
 int main()
 {
     int x, y, ch;
-    printf("1.insert end circular");
-    printf("\n2.delet end circular");
-    printf("\n3.insert first circular");
-    printf("\n4.delet first circular");
-    printf("\n5.insert mid circular");
-    printf("\n6.delet mid circular");
+    printf("1.insert end doubly simple linklist");
+    printf("\n2.delet end doubly simple linklist");
+    printf("\n3.insert first doubly simple linklist");
+    printf("\n4.delet first doubly simple linklist");
+    printf("\n5.insert mid doubly simple linklist");
+    printf("\n6.delet mid doubly simple linklist");
     printf("\n9.display");
     printf("\n0.Exit");
 
@@ -205,12 +220,3 @@ int main()
         }
     }
 }
-
-// int main()
-// {
-//     insertend(10);
-//     insertend(20);
-//     insertfirst(30);
-//     insertfirst(40);
-//     display();
-// }    
