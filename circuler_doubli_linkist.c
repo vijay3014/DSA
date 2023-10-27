@@ -172,7 +172,15 @@ int main()
      insertend(20);
      insertend(30);
      insertend(40);
-
+     insertfirst(50);
+     insertfirst(60);
+     insertfirst(70);
+     display();
+     deletfirst();
+     display();
+     deletmid(10);
+     display();
+     deletend();
      display();
 
 
